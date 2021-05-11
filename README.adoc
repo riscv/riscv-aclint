@@ -1,0 +1,25 @@
+= RISC-V ACLINT specification
+
+The ACLINT (Advanced Core Local Interruptor) specification defines a set
+of memory mapped devices which provide inter-processor interrupt and
+timer functionality for each HART of a multi-HART (or multi-processor)
+RISC-V platform.
+
+Discussion of ACLINT occurs on the
+https://lists.riscv.org/g/tech-unixplatformspec[RISC-V Unix Platform Mailing
+list]. It is publicly readable but posting requires being a member of the
+RISC-V Foundation. Any changes to the ACLINT specification needs to be
+discussed and approved there before being merged.
+
+= Licensing
+
+The files in this repository are licensed under the Creative Commons
+Attribution 4.0 International License (CC-BY 4.0).  The full license
+text is available at https://creativecommons.org/licenses/by/4.0/.
+
+= Building Documents
+
+The final specification in form of PDF and HTML can be generated using
+`make` command. The `makefile` internally uses asciidoctor so the packages
+required by the `makefile` need to be installed on the build system using
+`make install-debs` or `make install-rpms`.

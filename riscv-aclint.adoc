@@ -1,0 +1,213 @@
+// SPDX-License-Identifier: CC-BY-4.0
+
+= RISC-V Advanced Core Local Interruptor Specification
+:author: RISC-V Platform Specification Task Group
+:email: tech-unixplatformspec@lists.riscv.org
+:revnumber: 1.0-draft
+:sectnums:
+:xrefstyle: short
+:toc: macro
+
+// Table of contents
+toc::[]
+
+[preface]
+== Copyright and license information
+
+This RISC-V ACLINT specification has been contributed directly or
+indirectly by:
+
+[%hardbreaks]
+* Andrew Waterman <andrew@sifive.com>
+* Greg Favor <gfavor@ventanamicro.com>
+* John Hauser <jh.riscv@jhauser.us>
+* Anup Patel <anup.patel@wdc.com>
+
+*NOTE:* Please add yourself to the above list if you have contributed to
+the RISC-V ACLINT specification.
+
+It is licensed under the Creative Commons Attribution 4.0 International
+License (CC-BY 4.0). The full license text is available at
+https://creativecommons.org/licenses/by/4.0/.
+
+[preface]
+== Change Log
+
+=== Version 1.0-draft
+
+* Initial release with MTIMER, MSWI, and SSWI devices
+
+== Introduction
+
+This RISC-V ACLINT specification defines a set of memory mapped devices
+which provide inter-processor interrupts (IPI) and timer functionalities
+for each HART on a multi-HART RISC-V platform. These HART-level IPI and
+timer functionalities are required by operating systems, bootloaders and
+firmwares running on a multi-HART RISC-V platform.
+
+The SiFive Core-Local Interruptor (CLINT) device has been widely in RISC-V
+world to provide machine-level IPI and timer functionaities. Unfortunately,
+the SiFive CLINT has an unified register map for both IPI and timer
+functionalities and it does not provide supervisor-level IPI functionality.
+
+The RISC-V ACLINT specification takes a more modular approach by defining
+separate memory mapped devices for IPI and timer functionalities. This
+modularity allows RISC-V platforms to omit some of the RISC-V ACLINT devices
+for which platform has alternate mechanism. In addition to modularity, the
+RISC-V ACLINT specification also defines a dedicated memory mapped device
+for supervisor-level IPIs. The <<table_aclint_device_list>> below shows the
+list of devices defined by the RISC-V ACLINT specification.
+
+[#table_aclint_device_list]
+.ACLINT Devices
+[cols="1,2,3", width=95%, align="center", options="header"]
+|===
+| Name   | Privilege Level | Functionality
+| MTIMER | Machine         | Fixed-frequency counter and timer events
+| MSWI   | Machine         | Inter-processor (or software) interrupts
+| SSWI   | Supervisor      | Inter-processor (or software) interrupts
+|===
+
+=== Backward Compatibility With SiFive CLINT
+
+The RISC-V ACLINT specification is defined to be backward compatible with the
+SiFive CLINT specification. The register definitions and register offsets of
+the MTIMER and MSWI devices are compatible with the timer and IPI registers
+defined by the SiFive CLINT specification. A SiFive CLINT device on a RISC-V
+platform can be logically seen as one MSWI device and one MTIMER devices
+placed next to each other in the memory address space as shown in
+<<table_sifive_clint_compatiblity>> below.
+
+[#table_sifive_clint_compatiblity]
+.One SiFive CLINT device is equivalent to two ACLINT devices
+[cols="3,2,3", width=95%, align="center", options="header"]
+|===
+| SiFive CLINT Offset Range | ACLINT Device | Functionality
+| 0x0000_0000 - 0x0000_3fff | MSWI          | Machine-level inter-processor
+                                              (or software) interrupts
+| 0x0000_4000 - 0x0000_bfff | MTIMER        | Machine-level fixed-frequency
+                                              counter and timer events
+|===
+
+== Machine-level Timer Device (MTIMER)
+
+The MTIMER device provides machine-level timer functionality for a set of
+HARTs on a RISC-V platform. It has a single fixed-frequency monotonic time
+counter (*MTIME*) register and a time compare register (*MTIMECMP*) for
+each HART connected to the MTIMER device.
+
+The maximum number of HARTs supported by a single MTIMER device is 4095
+which is equivalent to the maximum number of MTIMECMP registers.
+
+=== Register Map
+
+[#table_aclint_mtimer_register_list]
+.ACLINT MTIMER Device Register Map
+[cols="2,1,1,2,4", width=95%, align="center", options="header"]
+|===
+| Offset      | Width | Attr | Name         | Description
+| 0x0000_0000 | 8B    | RW   | MTIMECMP0    | HART 0 machine-level time compare
+| 0x0000_0008 | 8B    | RW   | MTIMECMP1    | HART 1 machine-level time compare
+| 0x0000_0010 | 8B    | RW   | MTIMECMP2    | HART 2 Machine-level time compare
+| ...         | ...   | ...  | ...          | ...
+| 0x0000_7FF8 | 8B    | RW   | MTIME        | Machine-level time counter
+|===
+
+=== MTIME Register (Offset: 0x00007FF8)
+
+The MTIME register is a 64-bit read-write register that contains the number
+of cycles counted based on a fixed reference frequency.
+
+On reset, MTIME is cleared to zero.
+
+=== MTIMECMP Registers (Offsets: 0x00000000 - 0x00007FF0)
+
+The MTIMECMP registers are per-HART 64-bit read-write registers. It contains
+the MTIME register value at which machine-level timer interrupt is to be
+triggerred for the corresponding HART.
+
+The matchine-level timer interrupt of a HART is pending whenever MTIME is
+greater than or equal to the value in the corresponding MTIMECMP register.
+The machine-level timer interrupt is reflected in the MTIP bit of the `mip`
+CSR.
+
+On reset, MTIMECMP registers are in unknown state.
+
+== Machine-level Software Interrupt Device (MSWI)
+
+The MSWI device provides machine-level IPI functionality for a set of
+HARTs on a RISC-V platform. It has an IPI register (*MSIP*) for each
+HART connected to the MSWI device.
+
+The maximum number of HARTs supported by a single MSWI device is 4095
+which is equivalent to the maximum number of MSIP registers.
+
+=== Register Map
+
+[#table_aclint_mswi_register_list]
+.ACLINT MSWI Device Register Map
+[cols="2,1,1,2,4", width=95%, align="center", options="header"]
+|===
+| Offset      | Width | Attr | Name     | Description
+| 0x0000_0000 | 4B    | RW   | MSIP0    | HART 0 machine-level IPI register
+| 0x0000_0004 | 4B    | RW   | MSIP1    | HART 1 machine-level IPI register
+| 0x0000_0008 | 4B    | RW   | MSIP2    | HART 2 machine-level IPI register
+| ...         | ...   | ...  | ...      | ...
+| 0x0000_3FFC | 4B    |      | RESERVED | Reserved for future use.
+|===
+
+=== MSIP Registers (Offsets: 0x00000000 - 0x00004FFC)
+
+Each MSIP register is a 32-bit wide WARL register where the upper 31 bits
+are tied to zero. The least significant bit is reflected in the MSIP bit
+of the `mip` CSR. A machine-level software interrupt for a HART is pending
+or cleared by writting '1' or '0' respectively to the corresponding MSIP
+register.
+
+On reset, each MSIP register is cleared to zero.
+
+== Supervisor-level Software Interrupt Device (SSWI)
+
+The SSWI device provides supervisor-level IPI functionality for a set of
+HARTs on a RISC-V platform. It has an IPI register (*SSIP*) for each HART
+connected to the SSWI device.
+
+The maximum number of HARTs supported by a single SSWI device is 4095
+which is equivalent to the maximum number of SSIP registers.
+
+=== Register Map
+
+[#table_aclint_sswi_register_list]
+.ACLINT SSWI Device Register Map
+[cols="2,1,1,2,4", width=95%, align="center", options="header"]
+|===
+| Offset      | Width | Attr | Name     | Description
+| 0x0000_0000 | 4B    | RW   | SSIP0    | HART 0 supervisor-level IPI register
+| 0x0000_0004 | 4B    | RW   | SSIP1    | HART 1 supervisor-level IPI register
+| 0x0000_0008 | 4B    | RW   | SSIP2    | HART 2 supervisor-level IPI register
+| ...         | ...   | ...  | ...      | ...
+| 0x0000_3FFC | 4B    |      | RESERVED | Reserved for future use.
+|===
+
+=== SSIP Registers (Offsets: 0x00000000 - 0x00004FFC)
+
+Each SSIP register is a 32-bit wide WARL register where the upper 31 bits
+are tied to zero. The least significant bit is reflected in the SSIP bit of
+the `mip` CSR. A supervisor-level software interrupt for a HART is pending
+or cleared by writting '1' or '0' respectively to the corresponding SSIP
+register.
+
+The RISC-V privilege specification defines SSIP bit of the `mip` CSR as
+writeable. The supervisor-level software interrupt should be made pending
+based on the logical-OR of software writable SSIP bit and the signal from
+the external software interrupt device (such as SSWI device). When `mip`
+CSR is read with a CSR instruction, the value of SSIP bit returned in the
+`rd` destination register is the logical-OR of software writable SSIP bit
+and the signal from the external software interrupt device (such as SSWI
+device).
+
+*NOTE:* Until the SSIP bit definition in the RISC-V privilege specification
+is updated, the modified definition of SSIP bit described above should be
+used to implement SSWI device on a RISC-V platform.
+
+On reset, each SSIP register is cleared to zero.
