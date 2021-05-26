@@ -35,6 +35,7 @@ https://creativecommons.org/licenses/by/4.0/.
 
 === Version 1.0-draft
 
+* Dedicated section on synchnronizing multiple MTIMER devices
 * Initial release with MTIMER, MSWI, and SSWI devices
 
 == Introduction
@@ -132,6 +133,70 @@ The machine-level timer interrupt is reflected in the MTIP bit of the `mip`
 CSR.
 
 On reset, MTIMECMP registers are in unknown state.
+
+=== Synchronizing Multiple MTIMER Devices
+
+A RISC-V platform can have multiple HARTs grouped into hierarchical topology
+groups (such as clusters, nodes, or sockets) where each topology group has
+it's own MTIMER device. Further, such RISC-V platform can also allow
+clock-gating or powering off for a topology group (including the MTIMER
+device) at runtime.
+
+On a RISC-V platform with multiple MTIMER devices, all must satisfy the
+RISC-V architectural requirement that all the MTIME registers with respect
+to each other, and all the per-HART `time` CSRs with respect to each other,
+are synchronized within single MTIME tick (or MTIME update period).
+
+The synchronization between MTIME registers should be done:
+
+* By hardware after system reset in a platform specific way
+* By software at runtime when any of the MTIMER device is out of sync
+  due to power managment
+
+When software updates one, multiple, or all MTIME registers, it must maintain
+the preceding synchronization requirements (through measuring and then taking
+into account the differing latencies of performing reads or writes to the
+different MTIME registers).
+
+As an example, the below RISC-V 64-bit assembly sequence can be used by
+software to synchronize a MTIME register with reference to another MTIME
+register.
+
+[#source_sync_mtime_registers]
+.Synchronizing a MTIME Registers On RISC-V 64-bit Platform
+[source,C]
+----
+        /*
+         * void aclint_mtime_sync(unsigned long target_mtime_address,
+         *                        unsigned long reference_mtime_address)
+         */
+        .globl aclint_mtime_sync
+aclint_mtime_sync:
+        /* Read target MTIME register in T0 register */
+        ld        t0, (a0)
+
+        /* Read reference MTIME register in T1 register */
+        ld        t1, (a1)
+
+        /* Read target MTIME register in T2 register */
+        ld        t2, (a0)
+
+        /*
+         * Compute target MTIME adjustment in T3 register
+         * T3 = T1 - ((T0 + T2) / 2)
+         */
+        srli      t0, t0, 1
+        srli      t2, t2, 1
+        add       t3, t0, t2
+        sub       t3, t1, t3
+
+        /* Update target MTIME register */
+        ld        t4, (a0)
+        add       t4, t4, t3
+        sd        t4, (a0)
+
+        ret
+----
 
 == Machine-level Software Interrupt Device (MSWI)
 
