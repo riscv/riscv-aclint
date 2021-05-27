@@ -167,19 +167,23 @@ register.
 [source,C]
 ----
         /*
-         * void aclint_mtime_sync(unsigned long target_mtime_address,
+         * unsigned long aclint_mtime_sync(
+         *                        unsigned long target_mtime_address,
          *                        unsigned long reference_mtime_address)
          */
         .globl aclint_mtime_sync
 aclint_mtime_sync:
         /* Read target MTIME register in T0 register */
         ld        t0, (a0)
+        fence     i, i
 
         /* Read reference MTIME register in T1 register */
         ld        t1, (a1)
+        fence     i, i
 
         /* Read target MTIME register in T2 register */
         ld        t2, (a0)
+        fence     i, i
 
         /*
          * Compute target MTIME adjustment in T3 register
@@ -195,8 +199,16 @@ aclint_mtime_sync:
         add       t4, t4, t3
         sd        t4, (a0)
 
+        /* Return MTIME adjustment value */
+        add       a0, t3, zero
+
         ret
 ----
+
+*NOTE:* On some RISC-V platforms, the MTIME synchroinzation sequence (i.e.
+the `aclint_mtime_sync()` function above) will need to be repeated few times
+until delta between target MTIME register and reference MTIME register is
+zero (or very close to zero).
 
 == Machine-level Software Interrupt Device (MSWI)
 
