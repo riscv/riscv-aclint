@@ -127,8 +127,11 @@ The MTIMECMP registers are per-HART 64-bit read-write registers. It contains
 the MTIME register value at which machine-level timer interrupt is to be
 triggerred for the corresponding HART.
 
-The matchine-level timer interrupt of a HART is pending whenever MTIME is
-greater than or equal to the value in the corresponding MTIMECMP register.
+The machine-level timer interrupt of a HART is pending whenever MTIME is
+greater than or equal to the value in the corresponding MTIMECMP register
+whereas the machine-level timer interrupt of a HART is cleared whenever
+MTIME is less than the value of the corresponding MTIMECMP register.
+
 The machine-level timer interrupt is reflected in the MTIP bit of the `mip`
 CSR.
 
