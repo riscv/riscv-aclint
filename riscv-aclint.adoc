@@ -142,16 +142,30 @@ it's own MTIMER device. Further, such RISC-V platform can also allow
 clock-gating or powering off for a topology group (including the MTIMER
 device) at runtime.
 
-On a RISC-V platform with multiple MTIMER devices, all must satisfy the
-RISC-V architectural requirement that all the MTIME registers with respect
-to each other, and all the per-HART `time` CSRs with respect to each other,
-are synchronized within single MTIME tick (or MTIME update period).
+On a RISC-V platform with multiple MTIMER devices residing on same die (or
+socket), all must satisfy the RISC-V architectural requirement that all the
+MTIME registers with respect to each other, and all the per-HART `time` CSRs
+with respect to each other, are synchronized within one MTIME tick (or MTIME
+update period). For example, if MTIME update frequency is 100 MHz to 10 MHz
+then MTIME registers (and their associated `time` CSRs) should be synchronized
+within 10ns to 100ns respectively.
 
-The synchronization between MTIME registers should be done:
+On a RISC-V platform with multiple MTIMER devices on different die, the MTIME
+registers (and their associated `time` CSRs) may be synchronized only within
+one minimum MTIME update period of each other. For example, if MTIME update
+frequency is 10 MHz then MTIME registers (and their associated `time` CSRs)
+should be synchronized within 100ns.
 
-* By hardware after system reset in a platform specific way
-* By software at runtime when any of the MTIMER device is out of sync
-  due to power managment
+To satisfy the preceding MTIME synchronization requirements:
+
+* All MTIMER devices should have same input clock so that runtime drift
+  between MTIME registers (and their associated `time` CSRs) can be
+  minimized
+* Upon system reset, the hardware must synchronize and set all MTIME
+  registers to zero
+* When a MTIMER devices is stopped and started again due to power
+  managment event, the software should synchronize all MTIME registers
+  (and their associated `time` CSRs)
 
 When software updates one, multiple, or all MTIME registers, it must maintain
 the preceding synchronization requirements (through measuring and then taking
@@ -164,13 +178,12 @@ register.
 
 [#source_sync_mtime_registers]
 .Synchronizing a MTIME Registers On RISC-V 64-bit Platform
-[source,C]
+[source, assembly]
 ----
-        /*
-         * unsigned long aclint_mtime_sync(
-         *                        unsigned long target_mtime_address,
-         *                        unsigned long reference_mtime_address)
-         */
+/*
+ * unsigned long aclint_mtime_sync(unsigned long target_mtime_address,
+ *                                 unsigned long reference_mtime_address)
+ */
         .globl aclint_mtime_sync
 aclint_mtime_sync:
         /* Read target MTIME register in T0 register */
