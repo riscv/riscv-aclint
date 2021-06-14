@@ -35,7 +35,7 @@ https://creativecommons.org/licenses/by/4.0/.
 
 === Version 1.0-draft
 
-* Dedicated section on synchnronizing multiple MTIMER devices
+* Dedicated section on synchronizing multiple MTIMER devices
 * Initial release with MTIMER, MSWI, and SSWI devices
 
 == Introduction
@@ -47,7 +47,7 @@ timer functionalities are required by operating systems, bootloaders and
 firmwares running on a multi-HART RISC-V platform.
 
 The SiFive Core-Local Interruptor (CLINT) device has been widely in RISC-V
-world to provide machine-level IPI and timer functionaities. Unfortunately,
+world to provide machine-level IPI and timer functionalities. Unfortunately,
 the SiFive CLINT has an unified register map for both IPI and timer
 functionalities and it does not provide supervisor-level IPI functionality.
 
@@ -77,9 +77,9 @@ the MTIMER and MSWI devices are compatible with the timer and IPI registers
 defined by the SiFive CLINT specification. A SiFive CLINT device on a RISC-V
 platform can be logically seen as one MSWI device and one MTIMER devices
 placed next to each other in the memory address space as shown in
-<<table_sifive_clint_compatiblity>> below.
+<<table_sifive_clint_compatibility>> below.
 
-[#table_sifive_clint_compatiblity]
+[#table_sifive_clint_compatibility]
 .One SiFive CLINT device is equivalent to two ACLINT devices
 [cols="3,2,3", width=95%, align="center", options="header"]
 |===
@@ -125,7 +125,7 @@ On reset, MTIME is cleared to zero.
 
 The MTIMECMP registers are per-HART 64-bit read-write registers. It contains
 the MTIME register value at which machine-level timer interrupt is to be
-triggerred for the corresponding HART.
+triggered for the corresponding HART.
 
 The machine-level timer interrupt of a HART is pending whenever MTIME is
 greater than or equal to the value in the corresponding MTIMECMP register
@@ -167,7 +167,7 @@ To satisfy the preceding MTIME synchronization requirements:
 * Upon system reset, the hardware must synchronize and set all MTIME
   registers to zero
 * When a MTIMER devices is stopped and started again due to power
-  managment event, the software should synchronize all MTIME registers
+  management event, the software should synchronize all MTIME registers
   (and their associated `time` CSRs)
 
 When software updates one, multiple, or all MTIME registers, it must maintain
@@ -221,7 +221,7 @@ aclint_mtime_sync:
         ret
 ----
 
-*NOTE:* On some RISC-V platforms, the MTIME synchroinzation sequence (i.e.
+*NOTE:* On some RISC-V platforms, the MTIME synchronization sequence (i.e.
 the `aclint_mtime_sync()` function above) will need to be repeated few times
 until delta between target MTIME register and reference MTIME register is
 zero (or very close to zero).
@@ -254,7 +254,7 @@ which is equivalent to the maximum number of MSIP registers.
 Each MSIP register is a 32-bit wide WARL register where the upper 31 bits
 are tied to zero. The least significant bit is reflected in the MSIP bit
 of the `mip` CSR. A machine-level software interrupt for a HART is pending
-or cleared by writting '1' or '0' respectively to the corresponding MSIP
+or cleared by writing '1' or '0' respectively to the corresponding MSIP
 register.
 
 On reset, each MSIP register is cleared to zero.
@@ -287,7 +287,7 @@ which is equivalent to the maximum number of SSIP registers.
 Each SSIP register is a 32-bit wide WARL register where the upper 31 bits
 are tied to zero. The least significant bit is reflected in the SSIP bit of
 the `mip` CSR. A supervisor-level software interrupt for a HART is pending
-or cleared by writting '1' or '0' respectively to the corresponding SSIP
+or cleared by writing '1' or '0' respectively to the corresponding SSIP
 register.
 
 The RISC-V privilege specification defines SSIP bit of the `mip` CSR as
