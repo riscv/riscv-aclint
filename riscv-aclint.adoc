@@ -22,6 +22,7 @@ indirectly by:
 * Greg Favor <gfavor@ventanamicro.com>
 * John Hauser <jh.riscv@jhauser.us>
 * Anup Patel <anup.patel@wdc.com>
+* Bin Meng <bmeng.cn@gmail.com>
 
 *NOTE:* Please add yourself to the above list if you have contributed to
 the RISC-V ACLINT specification.
