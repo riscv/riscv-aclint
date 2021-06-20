@@ -146,30 +146,28 @@ it's own MTIMER device. Further, such RISC-V platform can also allow
 clock-gating or powering off for a topology group (including the MTIMER
 device) at runtime.
 
-On a RISC-V platform with multiple MTIMER devices residing on same die (or
-socket), all must satisfy the RISC-V architectural requirement that all the
+On a RISC-V platform with multiple MTIMER devices residing on the same die, 
+all must satisfy the RISC-V architectural requirement that all the
 MTIME registers with respect to each other, and all the per-HART `time` CSRs
-with respect to each other, are synchronized within one MTIME tick (or MTIME
-update period). For example, if MTIME update frequency is 100 MHz to 10 MHz
+with respect to each other, are synchronized to within one MTIME tick (or MTIME
+update period). For example, if MTIME update frequency is 10 MHz to 100 MHz
 then MTIME registers (and their associated `time` CSRs) should be synchronized
-within 10ns to 100ns respectively.
+to within 100ns to 10ns respectively.
 
 On a RISC-V platform with multiple MTIMER devices on different die, the MTIME
-registers (and their associated `time` CSRs) may be synchronized only within
-one minimum MTIME update period of each other. For example, if MTIME update
-frequency is 10 MHz then MTIME registers (and their associated `time` CSRs)
-should be synchronized within 100ns.
+registers (and their associated `time` CSRs) on different die may be synchronized 
+to only within one minimum MTIME update period of each other (i.e. within 100ns 
+based on the minimum update frequency of 10 MHz).
 
 To satisfy the preceding MTIME synchronization requirements:
 
-* All MTIMER devices should have same input clock so that runtime drift
-  between MTIME registers (and their associated `time` CSRs) can be
-  minimized
-* Upon system reset, the hardware must synchronize and set all MTIME
+* All MTIMER devices should have the same input clock so as to avoid runtime drift
+  between MTIME registers (and their associated `time` CSRs)
+* Upon system reset, the hardware must initialize and synchronize all MTIME
   registers to zero
-* When a MTIMER devices is stopped and started again due to power
-  management event, the software should synchronize all MTIME registers
-  (and their associated `time` CSRs)
+* When an MTIMER device is stopped and started again due, say, to power
+  management actions, the software should re-synchronize this MTIME register 
+  with all other MTIME registers
 
 When software updates one, multiple, or all MTIME registers, it must maintain
 the preceding synchronization requirements (through measuring and then taking
