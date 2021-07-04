@@ -120,7 +120,7 @@ which is equivalent to the maximum number of MTIMECMP registers.
 The MTIME register is a 64-bit read-write register that contains the number
 of cycles counted based on a fixed reference frequency.
 
-On reset, MTIME is cleared to zero.
+On MTIMER device reset, the MTIME register is cleared to zero.
 
 === MTIMECMP Registers (Offsets: 0x00000000 - 0x00007FF0)
 
@@ -136,7 +136,7 @@ MTIME is less than the value of the corresponding MTIMECMP register.
 The machine-level timer interrupt is reflected in the MTIP bit of the `mip`
 CSR.
 
-On reset, MTIMECMP registers are in unknown state.
+On MTIMER device reset, the MTIMECMP registers are in unknown state.
 
 === Synchronizing Multiple MTIMER Devices
 
@@ -256,7 +256,7 @@ of the `mip` CSR. A machine-level software interrupt for a HART is pending
 or cleared by writing '1' or '0' respectively to the corresponding MSIP
 register.
 
-On reset, each MSIP register is cleared to zero.
+On MSWI device reset, each MSIP register is cleared to zero.
 
 == Supervisor-level Software Interrupt Device (SSWI)
 
@@ -302,4 +302,4 @@ device).
 is updated, the modified definition of SSIP bit described above should be
 used to implement SSWI device on a RISC-V platform.
 
-On reset, each SSIP register is cleared to zero.
+On SSWI device reset, each SSIP register is cleared to zero.
