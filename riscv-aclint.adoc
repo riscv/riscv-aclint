@@ -36,7 +36,7 @@ https://creativecommons.org/licenses/by/4.0/.
 
 === Version 1.0-draft
 
-* Dedicated section on synchronizing multiple MTIMER devices
+* Dedicated chapter on synchronizing multiple MTIMER devices
 * Initial release with MTIMER, MSWI, and SSWI devices
 
 == Introduction
@@ -138,7 +138,7 @@ CSR.
 
 On MTIMER device reset, the MTIMECMP registers are in unknown state.
 
-=== Synchronizing Multiple MTIMER Devices
+== Synchronizing Multiple MTIMER Devices
 
 A RISC-V platform can have multiple HARTs grouped into hierarchical topology
 groups (such as clusters, nodes, or sockets) where each topology group has
@@ -147,22 +147,22 @@ clock-gating or powering off for a topology group (including the MTIMER
 device) at runtime.
 
 On a RISC-V platform with multiple MTIMER devices residing on the same die, 
-all must satisfy the RISC-V architectural requirement that all the
-MTIME registers with respect to each other, and all the per-HART `time` CSRs
-with respect to each other, are synchronized to within one MTIME tick (or MTIME
-update period). For example, if MTIME update frequency is 10 MHz to 100 MHz
-then MTIME registers (and their associated `time` CSRs) should be synchronized
-to within 100ns to 10ns respectively.
+all must satisfy the RISC-V architectural requirement that all the MTIME
+registers with respect to each other, and all the per-HART `time` CSRs
+with respect to each other, are synchronized to within one MTIME tick (or
+MTIME update period). For example, if MTIME update frequency is 10 MHz to
+100 MHz then MTIME registers (and their associated `time` CSRs) should be
+synchronized to within 100ns to 10ns respectively.
 
-On a RISC-V platform with multiple MTIMER devices on different die, the MTIME
-registers (and their associated `time` CSRs) on different die may be synchronized 
-to only within one minimum MTIME update period of each other (i.e. within 100ns 
-based on the minimum update frequency of 10 MHz).
+On a RISC-V platform with multiple MTIMER devices on different die, the
+MTIME registers (and their associated `time` CSRs) on different die may be
+synchronized  to only within one minimum MTIME update period of each other
+(i.e. within 100ns  based on the minimum update frequency of 10 MHz).
 
 To satisfy the preceding MTIME synchronization requirements:
 
-* All MTIMER devices should have the same input clock so as to avoid runtime drift
-  between MTIME registers (and their associated `time` CSRs)
+* All MTIMER devices should have the same input clock so as to avoid runtime
+  drift between MTIME registers (and their associated `time` CSRs)
 * Upon system reset, the hardware must initialize and synchronize all MTIME
   registers to zero
 * When an MTIMER device is stopped and started again due, say, to power
