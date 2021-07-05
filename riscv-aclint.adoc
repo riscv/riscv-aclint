@@ -98,6 +98,14 @@ HARTs on a RISC-V platform. It has a single fixed-frequency monotonic time
 counter (*MTIME*) register and a time compare register (*MTIMECMP*) for
 each HART connected to the MTIMER device.
 
+On a RISC-V platform with multiple MTIMER devices, each MTIMER device
+provides machine-level timer functionality for different (or disjoint)
+set of HARTs. A MTIMER device assigns a HART index starting from zero
+to each HART associated with it. The HART index assigned to a HART by
+the MTIMER device may or may not have any relationship with the unique
+HART identifier (*hart ID*) that the RISC-V Privileged Architecture
+assigns to the HART.
+
 The maximum number of HARTs supported by a single MTIMER device is 4095
 which is equivalent to the maximum number of MTIMECMP registers.
 
@@ -108,9 +116,10 @@ which is equivalent to the maximum number of MTIMECMP registers.
 [cols="2,1,1,2,4", width=95%, align="center", options="header"]
 |===
 | Offset      | Width | Attr | Name         | Description
-| 0x0000_0000 | 8B    | RW   | MTIMECMP0    | HART 0 machine-level time compare
-| 0x0000_0008 | 8B    | RW   | MTIMECMP1    | HART 1 machine-level time compare
-| 0x0000_0010 | 8B    | RW   | MTIMECMP2    | HART 2 Machine-level time compare
+| 0x0000_0000 | 8B    | RW   | MTIMECMP0    | HART index 0 machine-level
+                                              time compare
+| 0x0000_0008 | 8B    | RW   | MTIMECMP1    | HART index 1 machine-level
+                                              time compare
 | ...         | ...   | ...  | ...          | ...
 | 0x0000_7FF8 | 8B    | RW   | MTIME        | Machine-level time counter
 |===
@@ -231,6 +240,13 @@ The MSWI device provides machine-level IPI functionality for a set of
 HARTs on a RISC-V platform. It has an IPI register (*MSIP*) for each
 HART connected to the MSWI device.
 
+On a RISC-V platform with multiple MSWI devices, each MSWI device provides
+machine-level IPI functionality for different (or disjoint) set of HARTs. A
+MSWI device assigns a HART index starting from zero to each HART associated
+with it. The HART index assigned to a HART by the MSWI device may or may not
+have any relationship with the unique HART identifier (*hart ID*) that the
+RISC-V Privileged Architecture assigns to the HART.
+
 The maximum number of HARTs supported by a single MSWI device is 4095
 which is equivalent to the maximum number of MSIP registers.
 
@@ -241,9 +257,10 @@ which is equivalent to the maximum number of MSIP registers.
 [cols="2,1,1,2,4", width=95%, align="center", options="header"]
 |===
 | Offset      | Width | Attr | Name     | Description
-| 0x0000_0000 | 4B    | RW   | MSIP0    | HART 0 machine-level IPI register
-| 0x0000_0004 | 4B    | RW   | MSIP1    | HART 1 machine-level IPI register
-| 0x0000_0008 | 4B    | RW   | MSIP2    | HART 2 machine-level IPI register
+| 0x0000_0000 | 4B    | RW   | MSIP0    | HART index 0 machine-level IPI
+                                          register
+| 0x0000_0004 | 4B    | RW   | MSIP1    | HART index 1 machine-level IPI
+                                          register
 | ...         | ...   | ...  | ...      | ...
 | 0x0000_3FFC | 4B    |      | RESERVED | Reserved for future use.
 |===
@@ -264,6 +281,13 @@ The SSWI device provides supervisor-level IPI functionality for a set of
 HARTs on a RISC-V platform. It has an IPI register (*SSIP*) for each HART
 connected to the SSWI device.
 
+On a RISC-V platform with multiple SSWI devices, each SSWI device provides
+machine-level IPI functionality for different (or disjoint) set of HARTs. A
+SSWI device assigns a HART index starting from zero to each HART associated
+with it. The HART index assigned to a HART by the SSWI device may or may not
+have any relationship with the unique HART identifier (*hart ID*) that the
+RISC-V Privileged Architecture assigns to the HART.
+
 The maximum number of HARTs supported by a single SSWI device is 4095
 which is equivalent to the maximum number of SSIP registers.
 
@@ -274,9 +298,10 @@ which is equivalent to the maximum number of SSIP registers.
 [cols="2,1,1,2,4", width=95%, align="center", options="header"]
 |===
 | Offset      | Width | Attr | Name     | Description
-| 0x0000_0000 | 4B    | RW   | SSIP0    | HART 0 supervisor-level IPI register
-| 0x0000_0004 | 4B    | RW   | SSIP1    | HART 1 supervisor-level IPI register
-| 0x0000_0008 | 4B    | RW   | SSIP2    | HART 2 supervisor-level IPI register
+| 0x0000_0000 | 4B    | RW   | SSIP0    | HART index 0 supervisor-level IPI
+                                          register
+| 0x0000_0004 | 4B    | RW   | SSIP1    | HART index 1 supervisor-level IPI
+                                          register
 | ...         | ...   | ...  | ...      | ...
 | 0x0000_3FFC | 4B    |      | RESERVED | Reserved for future use.
 |===
