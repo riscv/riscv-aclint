@@ -3,7 +3,7 @@
 = RISC-V Advanced Core Local Interruptor Specification
 :author: RISC-V Platform Specification Task Group
 :email: tech-unixplatformspec@lists.riscv.org
-:revnumber: 1.0-draft
+:revnumber: 1.0-draft1
 :sectnums:
 :xrefstyle: short
 :toc: macro
@@ -34,7 +34,7 @@ https://creativecommons.org/licenses/by/4.0/.
 [preface]
 == Change Log
 
-=== Version 1.0-draft
+=== Version 1.0
 
 * Dedicated chapter on synchronizing multiple MTIMER devices
 * Initial release with MTIMER, MSWI, and SSWI devices
