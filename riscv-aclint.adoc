@@ -115,8 +115,25 @@ which is equivalent to the maximum number of MTIMECMP registers.
 
 === Register Map
 
-[#table_aclint_mtimer_register_list]
-.ACLINT MTIMER Device Register Map
+A MTIMER device has two separate base addresses: one for the MTIME register
+and another for the MTIMECMP registers. These separate base addresses of a
+single MTIMER device allows multiple MTIMER devices to share the same
+physical MTIME register.
+
+The <<table_aclint_mtimer_time_register_list>> below shows map of the MTIME
+register whereas the <<table_aclint_mtimer_compare_register_list>> below
+shows map of the MTIMECMP registers relative to separate base addresses.
+
+[#table_aclint_mtimer_time_register_list]
+.ACLINT MTIMER Time Register Map
+[cols="2,1,1,2,4", width=95%, align="center", options="header"]
+|===
+| Offset      | Width | Attr | Name         | Description
+| 0x0000_0000 | 8B    | RW   | MTIME        | Machine-level time counter
+|===
+
+[#table_aclint_mtimer_compare_register_list]
+.ACLINT MTIMER Compare Register Map
 [cols="2,1,1,2,4", width=95%, align="center", options="header"]
 |===
 | Offset      | Width | Attr | Name         | Description
@@ -125,7 +142,8 @@ which is equivalent to the maximum number of MTIMECMP registers.
 | 0x0000_0008 | 8B    | RW   | MTIMECMP1    | HART index 1 machine-level
                                               time compare
 | ...         | ...   | ...  | ...          | ...
-| 0x0000_7FF8 | 8B    | RW   | MTIME        | Machine-level time counter
+| 0x0000_7FF0 | 8B    | RW   | MTIMECMP4094 | HART index 4094 machine-level
+                                              time compare
 |===
 
 === MTIME Register (Offset: 0x00007FF8)
