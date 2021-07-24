@@ -99,13 +99,16 @@ counter (*MTIME*) register and a time compare register (*MTIMECMP*) for
 each HART connected to the MTIMER device. A MTIMER device not connected
 to any HART should only have a MTIME register and no MTIMECMP registers.
 
-On a RISC-V platform with multiple MTIMER devices, each MTIMER device
-provides machine-level timer functionality for different (or disjoint)
-set of HARTs. A MTIMER device assigns a HART index starting from zero
-to each HART associated with it. The HART index assigned to a HART by
-the MTIMER device may or may not have any relationship with the unique
-HART identifier (*hart ID*) that the RISC-V Privileged Architecture
-assigns to the HART.
+On a RISC-V platform with multiple MTIMER devices:
+
+* Each MTIMER device provides machine-level timer functionality for different
+(or disjoint) set of HARTs. A MTIMER device assigns a HART index starting
+from zero to each HART associated with it. The HART index assigned to a HART
+by the MTIMER device may or may not have any relationship with the unique
+HART identifier (*hart ID*) that the RISC-V Privileged Architecture assigns
+to the HART.
+* Two or more MTIMER devices can share the same physical MTIME register while
+having their own separate MTIMECMP registers.
 
 The maximum number of HARTs supported by a single MTIMER device is 4095
 which is equivalent to the maximum number of MTIMECMP registers.
@@ -141,9 +144,8 @@ triggered for the corresponding HART.
 The machine-level timer interrupt of a HART is pending whenever MTIME is
 greater than or equal to the value in the corresponding MTIMECMP register
 whereas the machine-level timer interrupt of a HART is cleared whenever
-MTIME is less than the value of the corresponding MTIMECMP register.
-
-The machine-level timer interrupt is reflected in the MTIP bit of the `mip`
+MTIME is less than the value of the corresponding MTIMECMP register. The
+machine-level timer interrupt is reflected in the MTIP bit of the `mip`
 CSR.
 
 On MTIMER device reset, the MTIMECMP registers are in unknown state.
