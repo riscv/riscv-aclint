@@ -168,7 +168,7 @@ CSR.
 
 On MTIMER device reset, the MTIMECMP registers are in unknown state.
 
-== Synchronizing Multiple MTIMER Devices
+=== Synchronizing Multiple MTIME Registers
 
 A RISC-V platform can have multiple HARTs grouped into hierarchical topology
 groups (such as clusters, nodes, or sockets) where each topology group has
@@ -191,11 +191,11 @@ synchronized  to only within one minimum MTIME update period of each other
 
 To satisfy the preceding MTIME synchronization requirements:
 
-* All MTIMER devices should have the same input clock so as to avoid runtime
-  drift between MTIME registers (and their associated `time` CSRs)
+* All MTIME registers should have the same input clock so as to avoid runtime
+  drift between separate MTIME registers (and their associated `time` CSRs)
 * Upon system reset, the hardware must initialize and synchronize all MTIME
   registers to zero
-* When an MTIMER device is stopped and started again due, say, to power
+* When a MTIMER device is stopped and started again due, say, to power
   management actions, the software should re-synchronize this MTIME register 
   with all other MTIME registers
 
