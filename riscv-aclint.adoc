@@ -96,7 +96,8 @@ placed next to each other in the memory address space as shown in
 The MTIMER device provides machine-level timer functionality for a set of
 HARTs on a RISC-V platform. It has a single fixed-frequency monotonic time
 counter (*MTIME*) register and a time compare register (*MTIMECMP*) for
-each HART connected to the MTIMER device.
+each HART connected to the MTIMER device. A MTIMER device not connected
+to any HART should only have a MTIME register and no MTIMECMP registers.
 
 On a RISC-V platform with multiple MTIMER devices, each MTIMER device
 provides machine-level timer functionality for different (or disjoint)
