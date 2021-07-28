@@ -146,7 +146,7 @@ shows map of the MTIMECMP registers relative to separate base addresses.
                                               time compare
 |===
 
-=== MTIME Register (Offset: 0x00007FF8)
+=== MTIME Register (Offset: 0x00000000)
 
 The MTIME register is a 64-bit read-write register that contains the number
 of cycles counted based on a fixed reference frequency.
