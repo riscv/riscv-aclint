@@ -299,8 +299,8 @@ On MSWI device reset, each MSIP register is cleared to zero.
 == Supervisor-level Software Interrupt Device (SSWI)
 
 The SSWI device provides supervisor-level IPI functionality for a set of
-HARTs on a RISC-V platform. It has an IPI register (*SSIP*) for each HART
-connected to the SSWI device.
+HARTs on a RISC-V platform. It provides a register to set IPI (*SETSSIP*)
+for each HART connected to the SSWI device.
 
 On a RISC-V platform with multiple SSWI devices, each SSWI device provides
 supervisor-level IPI functionality for different (or disjoint) set of HARTs.
@@ -309,8 +309,8 @@ with it. The HART index assigned to a HART by the SSWI device may or may not
 have any relationship with the unique HART identifier (*hart ID*) that the
 RISC-V Privileged Architecture assigns to the HART.
 
-The maximum number of HARTs supported by a single SSWI device is 4095
-which is equivalent to the maximum number of SSIP registers.
+The maximum number of HARTs supported by a single SSWI device is 4095 which
+is equivalent to the maximum number of SETSSIP registers.
 
 === Register Map
 
@@ -319,21 +319,22 @@ which is equivalent to the maximum number of SSIP registers.
 [cols="2,1,1,2,4", width=95%, align="center", options="header"]
 |===
 | Offset      | Width | Attr | Name     | Description
-| 0x0000_0000 | 4B    | RW   | SSIP0    | HART index 0 supervisor-level IPI
-                                          register
-| 0x0000_0004 | 4B    | RW   | SSIP1    | HART index 1 supervisor-level IPI
-                                          register
+| 0x0000_0000 | 4B    | RW   | SETSSIP0 | HART index 0 set supervisor-level
+                                          IPI register
+| 0x0000_0004 | 4B    | RW   | SETSSIP1 | HART index 1 set supervisor-level
+                                          IPI register
 | ...         | ...   | ...  | ...      | ...
 | 0x0000_3FFC | 4B    |      | RESERVED | Reserved for future use.
 |===
 
-=== SSIP Registers (Offsets: 0x00000000 - 0x00003FFC)
+=== SETSSIP Registers (Offsets: 0x00000000 - 0x00003FFC)
 
-Each SSIP register is a 32-bit wide WARL register where the upper 31 bits
+Each SETSSIP register is a 32-bit wide WARL register where the upper 31 bits
 are tied to zero. The least significant bit always reads `0` but writing
 `1` sends an edge-sensitive software interrupt signal to the corresponding
 HART causing the HART to set SSIP bit in the `mip` CSR. Writing `0` to the
-least significant bit has no effect and the machine-level or supervisor-level
-software can directly clear the SSIP bit in `mip` or `sip` CSR.
+least significant bit of SETSSIP register has no effect. The machine-level
+or supervisor-level software can directly clear the SSIP bit in `mip` or
+`sip` CSR.
 
-On SSWI device reset, each SSIP register is cleared to zero.
+On SSWI device reset, each SETSSIP register is cleared to zero.
