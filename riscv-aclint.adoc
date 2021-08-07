@@ -329,12 +329,20 @@ is equivalent to the maximum number of SETSSIP registers.
 
 === SETSSIP Registers (Offsets: 0x00000000 - 0x00003FFC)
 
-Each SETSSIP register is a 32-bit wide WARL register where the upper 31 bits
-are tied to zero. The least significant bit always reads `0` but writing
-`1` sends an edge-sensitive software interrupt signal to the corresponding
-HART causing the HART to set SSIP bit in the `mip` CSR. Writing `0` to the
-least significant bit of SETSSIP register has no effect. The machine-level
-or supervisor-level software can directly clear the SSIP bit in `mip` or
-`sip` CSR.
+Each SETSSIP register is a 32-bit wide WARL register where the upper 31
+bits are wired to zero. The least significant bit of a SETSSIP register
+always reads `0`. Writing `0` to the least significant bit of a SETSSIP
+register has no effect whereas writing `1` to the least significant bit
+sends an edge-sensitive interrupt signal to the corresponding HART causing
+the HART to set SSIP bit in the `mip` CSR. Writes to a SETSSIP register
+are guaranteed to be reflected in SSIP bit of corresponding HART but not
+necessarily immediately.
+
+[sidebar]
+--
+[underline]*_NOTE_*: The RISC-V Privileged Architecture defines the SSIP
+bit in `mip` CSR as a writeable bit so the M-mode or S-mode software can
+directly clear the SSIP bit.
+--
 
 On SSWI device reset, each SETSSIP register is cleared to zero.
