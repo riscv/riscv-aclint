@@ -109,6 +109,9 @@ HART identifier (*hart ID*) that the RISC-V Privileged Architecture assigns
 to the HART.
 * Two or more MTIMER devices can share the same physical MTIME register while
 having their own separate MTIMECMP registers.
+* The MTIMECMP registers of a MTIMER device must only compare against the
+MTIME register of the same MTIMER device for generating machine-level timer
+interrupt.
 
 The maximum number of HARTs supported by a single MTIMER device is 4095
 which is equivalent to the maximum number of MTIMECMP registers.
