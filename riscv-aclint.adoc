@@ -23,6 +23,7 @@ indirectly by:
 * John Hauser <jh.riscv@jhauser.us>
 * Anup Patel <anup.patel@wdc.com>
 * Bin Meng <bmeng.cn@gmail.com>
+* Wesley Norris <repnop@outlook.com>
 
 *NOTE:* Please add yourself to the above list if you have contributed to
 the RISC-V ACLINT specification.
@@ -47,16 +48,17 @@ for each HART on a multi-HART RISC-V platform. These HART-level IPI and
 timer functionalities are required by operating systems, bootloaders and
 firmwares running on a multi-HART RISC-V platform.
 
-The SiFive Core-Local Interruptor (CLINT) device has been widely in RISC-V
-world to provide machine-level IPI and timer functionalities. Unfortunately,
-the SiFive CLINT has an unified register map for both IPI and timer
-functionalities and it does not provide supervisor-level IPI functionality.
+The SiFive Core-Local Interruptor (CLINT) device has been widely adopted in
+the RISC-V world to provide machine-level IPI and timer functionalities.
+Unfortunately, the SiFive CLINT has a unified register map for both IPI and
+timer functionalities and it does not provide supervisor-level IPI
+functionality.
 
 The RISC-V ACLINT specification takes a more modular approach by defining
 separate memory mapped devices for IPI and timer functionalities. This
 modularity allows RISC-V platforms to omit some of the RISC-V ACLINT devices
-for which platform has alternate mechanism. In addition to modularity, the
-RISC-V ACLINT specification also defines a dedicated memory mapped device
+for when the platform has an alternate mechanism. In addition to modularity,
+the RISC-V ACLINT specification also defines a dedicated memory mapped device
 for supervisor-level IPIs. The <<table_aclint_device_list>> below shows the
 list of devices defined by the RISC-V ACLINT specification.
 
@@ -101,7 +103,7 @@ to any HART should only have a MTIME register and no MTIMECMP registers.
 
 On a RISC-V platform with multiple MTIMER devices:
 
-* Each MTIMER device provides machine-level timer functionality for different
+* Each MTIMER device provides machine-level timer functionality for a different
 (or disjoint) set of HARTs. A MTIMER device assigns a HART index starting
 from zero to each HART associated with it. The HART index assigned to a HART
 by the MTIMER device may or may not have any relationship with the unique
@@ -175,22 +177,22 @@ On MTIMER device reset, the MTIMECMP registers are in unknown state.
 
 A RISC-V platform can have multiple HARTs grouped into hierarchical topology
 groups (such as clusters, nodes, or sockets) where each topology group has
-it's own MTIMER device. Further, such RISC-V platform can also allow
+it's own MTIMER device. Further, such RISC-V platforms can also allow
 clock-gating or powering off for a topology group (including the MTIMER
 device) at runtime.
 
 On a RISC-V platform with multiple MTIMER devices residing on the same die, 
-all must satisfy the RISC-V architectural requirement that all the MTIME
-registers with respect to each other, and all the per-HART `time` CSRs
+each device must satisfy the RISC-V architectural requirement that all the
+MTIME registers with respect to each other, and all the per-HART `time` CSRs
 with respect to each other, are synchronized to within one MTIME tick (or
-MTIME update period). For example, if MTIME update frequency is 10 MHz to
-100 MHz then MTIME registers (and their associated `time` CSRs) should be
+MTIME update period). For example, if the MTIME update frequency is 10 MHz to
+100 MHz then the MTIME registers (and their associated `time` CSRs) should be
 synchronized to within 100ns to 10ns respectively.
 
 On a RISC-V platform with multiple MTIMER devices on different die, the
 MTIME registers (and their associated `time` CSRs) on different die may be
-synchronized  to only within one minimum MTIME update period of each other
-(i.e. within 100ns  based on the minimum update frequency of 10 MHz).
+synchronized to only within one minimum MTIME update period of each other
+(i.e. within 100ns based on the minimum update frequency of 10 MHz).
 
 To satisfy the preceding MTIME synchronization requirements:
 
@@ -198,7 +200,7 @@ To satisfy the preceding MTIME synchronization requirements:
   drift between separate MTIME registers (and their associated `time` CSRs)
 * Upon system reset, the hardware must initialize and synchronize all MTIME
   registers to zero
-* When a MTIMER device is stopped and started again due, say, to power
+* When a MTIMER device is stopped and started again due to, say, power
   management actions, the software should re-synchronize this MTIME register 
   with all other MTIME registers
 
@@ -268,7 +270,7 @@ HARTs on a RISC-V platform. It has an IPI register (*MSIP*) for each
 HART connected to the MSWI device.
 
 On a RISC-V platform with multiple MSWI devices, each MSWI device provides
-machine-level IPI functionality for different (or disjoint) set of HARTs. A
+machine-level IPI functionality for a different (or disjoint) set of HARTs. A
 MSWI device assigns a HART index starting from zero to each HART associated
 with it. The HART index assigned to a HART by the MSWI device may or may not
 have any relationship with the unique HART identifier (*hart ID*) that the
@@ -295,7 +297,7 @@ which is equivalent to the maximum number of MSIP registers.
 === MSIP Registers (Offsets: 0x00000000 - 0x00003FFC)
 
 Each MSIP register is a 32-bit wide WARL register where the upper 31 bits
-are tied to zero. The least significant bit is reflected in MSIP of the
+are wired to zero. The least significant bit is reflected in MSIP of the
 `mip` CSR. A machine-level software interrupt for a HART is pending or
 cleared by writing `1` or `0` respectively to the corresponding MSIP
 register.
@@ -305,11 +307,11 @@ On MSWI device reset, each MSIP register is cleared to zero.
 == Supervisor-level Software Interrupt Device (SSWI)
 
 The SSWI device provides supervisor-level IPI functionality for a set of
-HARTs on a RISC-V platform. It provides a register to set IPI (*SETSSIP*)
+HARTs on a RISC-V platform. It provides a register to set an IPI (*SETSSIP*)
 for each HART connected to the SSWI device.
 
 On a RISC-V platform with multiple SSWI devices, each SSWI device provides
-supervisor-level IPI functionality for different (or disjoint) set of HARTs.
+supervisor-level IPI functionality for a different (or disjoint) set of HARTs.
 A SSWI device assigns a HART index starting from zero to each HART associated
 with it. The HART index assigned to a HART by the SSWI device may or may not
 have any relationship with the unique HART identifier (*hart ID*) that the
@@ -341,7 +343,7 @@ reads `0`. Writing `0` to the least significant bit of a SETSSIP register
 has no effect whereas writing `1` to the least significant bit sends an
 edge-sensitive interrupt signal to the corresponding HART causing the HART
 to set SSIP in the `mip` CSR. Writes to a SETSSIP register are guaranteed to
-be reflected in SSIP of corresponding HART but not necessarily immediately.
+be reflected in SSIP of the corresponding HART but not necessarily immediately.
 
 [sidebar]
 --
