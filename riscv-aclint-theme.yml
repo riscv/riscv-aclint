@@ -6,3 +6,9 @@ caption:
 table:
   caption:
     side: bottom
+footer:
+  height: 0.5in
+  recto_content:
+    center: '*{page-number}*'
+  verso_content:
+    center: '*{page-number}*'
