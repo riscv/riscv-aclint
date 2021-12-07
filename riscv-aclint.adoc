@@ -181,18 +181,18 @@ it's own MTIMER device. Further, such RISC-V platforms can also allow
 clock-gating or powering off for a topology group (including the MTIMER
 device) at runtime.
 
-On a RISC-V platform with multiple MTIMER devices residing on the same die, 
+On a RISC-V platform with multiple MTIMER devices residing on the same die,
 each device must satisfy the RISC-V architectural requirement that all the
 MTIME registers with respect to each other, and all the per-HART `time` CSRs
-with respect to each other, are synchronized to within one MTIME tick (or
-MTIME update period). For example, if the MTIME update frequency is 10 MHz to
-100 MHz then the MTIME registers (and their associated `time` CSRs) should be
-synchronized to within 100ns to 10ns respectively.
+with respect to each other, are synchronized to within one MTIME tick period.
+For example, if the MTIME tick period is 10ns, then the MTIME registers, and
+their associated time CSRs, should respectively be synchronized to within
+10ns of each other.
 
 On a RISC-V platform with multiple MTIMER devices on different die, the
 MTIME registers (and their associated `time` CSRs) on different die may be
-synchronized to only within one minimum MTIME update period of each other
-(i.e. within 100ns based on the minimum update frequency of 10 MHz).
+synchronized to only within a specified interval of each other that is larger
+than the MTIME tick period. A platform may define a maximum allowed interval.
 
 To satisfy the preceding MTIME synchronization requirements:
 
