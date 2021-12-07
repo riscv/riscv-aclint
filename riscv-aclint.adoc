@@ -3,7 +3,7 @@
 = RISC-V Advanced Core Local Interruptor Specification
 :author: RISC-V Platform Specification Task Group
 :email: tech-unixplatformspec@lists.riscv.org
-:revnumber: 1.0-rc2 (stable)
+:revnumber: 1.0-rc3 (stable)
 :sectnums:
 :xrefstyle: short
 :toc: macro
