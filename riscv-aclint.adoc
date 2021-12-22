@@ -294,7 +294,7 @@ which is equivalent to the maximum number of MSIP registers.
 | 0x0000_3FFC | 4B    |      | RESERVED | Reserved for future use.
 |===
 
-=== MSIP Registers (Offsets: 0x00000000 - 0x00003FFC)
+=== MSIP Registers (Offsets: 0x00000000 - 0x00003FF8)
 
 Each MSIP register is a 32-bit wide WARL register where the upper 31 bits
 are wired to zero. The least significant bit is reflected in MSIP of the
@@ -335,7 +335,7 @@ is equivalent to the maximum number of SETSSIP registers.
 | 0x0000_3FFC | 4B    |      | RESERVED | Reserved for future use.
 |===
 
-=== SETSSIP Registers (Offsets: 0x00000000 - 0x00003FFC)
+=== SETSSIP Registers (Offsets: 0x00000000 - 0x00003FF8)
 
 Each SETSSIP register is a 32-bit wide WARL register where the upper 31 bits
 are wired to zero. The least significant bit of a SETSSIP register always
