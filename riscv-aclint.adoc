@@ -1,12 +1,51 @@
 // SPDX-License-Identifier: CC-BY-4.0
+[[riscv-doc-template]]
+:description: RISC-V Platform Specification for ACLINT
+:company: RISC-V
+:revdate:  January 10, 2022
+:revnumber: 1.0-rc3 (stable)
+:revremark: This document is in Draft state.  Change should be expected.
+:url-riscv: http://riscv.org
+:doctype: book
+:preface-title: Preamble
+:colophon:
+:appendix-caption: Appendix
+:imagesdir: images
+:title-logo-image: image:riscv-images/risc-v_logo.png[pdfwidth=3.25in,align=center]
+// Settings:
+:experimental:
+:reproducible:
+:WaveDromEditorApp: wavedrom-cli
+:imagesoutdir: images
+:icons: font
+:lang: en
+:listing-caption: Listing
+:sectnums:
+:sectnumlevels: 5
+:toclevels: 5
+:toc: left
+:source-highlighter: pygments
+ifdef::backend-pdf[]
+:source-highlighter: coderay
+endif::[]
+:data-uri:
+:hide-uri-scheme:
+:stem: latexmath
+:footnote:
+:xrefstyle: short 
 
 = RISC-V Advanced Core Local Interruptor Specification
 :author: RISC-V Platform Specification Task Group
 :email: tech-unixplatformspec@lists.riscv.org
-:revnumber: 1.0-rc3 (stable)
-:sectnums:
-:xrefstyle: short
-:toc: macro
+
+// Preamble
+[WARNING]
+.This document is in the link:http://riscv.org/spec-state[Draft state]
+====
+Assume everything can change. This draft specification will change before 
+being accepted as standard, so implementations made to this draft 
+specification will likely not conform to the future standard.
+====
 
 // Table of contents
 toc::[]
