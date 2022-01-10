@@ -3,6 +3,7 @@
 #
 
 ASCIIDOCTOR = asciidoctor
+ASCIIDOCTOR_PDF = $(ASCIIDOCTOR)-pdf
 DITAA = ditaa
 TARGETS = riscv-aclint.pdf
 TARGETS += riscv-aclint.html
@@ -17,8 +18,13 @@ all: $(IMAGES) $(TARGETS)
 %.html: %.adoc $(IMAGES)
 	$(ASCIIDOCTOR) -d book -b html $<
 
-%.pdf: %.adoc $(IMAGES) riscv-aclint-theme.yml
-	$(ASCIIDOCTOR) -d book -r asciidoctor-pdf -a pdf-style=riscv-aclint-theme.yml -b pdf $<
+%.pdf: %.adoc $(IMAGES) docs-resources/themes/riscv-pdf.yml
+	$(ASCIIDOCTOR_PDF) -v \
+	-a toc \
+	-a compress \
+	-a pdf-style=docs-resources/themes/riscv-pdf.yml \
+	-a pdf-fontsdir=docs-resources/fonts \
+	-o $@ $<
 
 .PHONY: clean
 clean:
