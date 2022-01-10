@@ -19,7 +19,7 @@ all: $(IMAGES) $(TARGETS)
 	$(ASCIIDOCTOR) -d book -b html $<
 
 %.pdf: %.adoc $(IMAGES) docs-resources/themes/riscv-pdf.yml
-	$(ASCIIDOCTOR_PDF) -v \
+	$(ASCIIDOCTOR_PDF) \
 	-a toc \
 	-a compress \
 	-a pdf-style=docs-resources/themes/riscv-pdf.yml \
