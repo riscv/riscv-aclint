@@ -41,7 +41,7 @@ in the PDF build fail with an error message like the following:
     -a pdf-style=docs-resources/themes/riscv-pdf.yml \
     -a pdf-fontsdir=docs-resources/fonts \
     --failure-level=ERROR \
-    -o profiles.pdf profiles.adoc
+    -o riscv-aclint.pdf riscv-aclint.adoc
     asciidoctor: ERROR: could not locate or load the built-in pdf theme `docs-resources/themes/riscv-pdf.yml'; reverting to default theme
     No such file or directory - notoserif-regular-subset.ttf not found in docs-resources/fonts
       Use --trace for backtrace
