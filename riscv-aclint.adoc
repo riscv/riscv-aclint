@@ -3,7 +3,7 @@
 :description: RISC-V Platform Specification for ACLINT
 :company: RISC-V
 :revdate:  January 10, 2022
-:revnumber: 1.0-rc3 (stable)
+:revnumber: 1.0-rc4 (stable)
 :revremark: This document is in Draft state.  Change should be expected.
 :url-riscv: http://riscv.org
 :doctype: book
