@@ -32,8 +32,34 @@ clean:
 
 .PHONY: install-debs
 install-debs:
-	sudo apt-get install pandoc asciidoctor ditaa ruby-asciidoctor-pdf
+	sudo apt-get install pandoc asciidoctor ditaa ruby-asciidoctor-pdf coderay
+	sudo gem install 'asciidoctor'
+	sudo gem install 'asciidoctor-bibtex'
+	sudo gem install 'asciidoctor-diagram'
+	sudo gem install 'asciidoctor-mathematical'
+	sudo gem install 'asciidoctor-pdf'
+	sudo gem install 'citeproc-ruby'
+	sudo gem install 'coderay'
+	sudo gem install 'csl-styles'
+	sudo gem install 'json'
+	sudo gem install 'pygments.rb'
+	sudo gem install 'rghost'
+	sudo gem install 'rouge'
+	sudo gem install 'ruby_dev'
 
 .PHONY: install-rpms
 install-rpms:
-	sudo dnf install ditaa pandoc rubygem-asciidoctor rubygem-asciidoctor-pdf
+	sudo dnf install ditaa pandoc rubygem-asciidoctor rubygem-asciidoctor-pdf coderay
+	sudo gem install 'asciidoctor'
+	sudo gem install 'asciidoctor-bibtex'
+	sudo gem install 'asciidoctor-diagram'
+	sudo gem install 'asciidoctor-mathematical'
+	sudo gem install 'asciidoctor-pdf'
+	sudo gem install 'citeproc-ruby'
+	sudo gem install 'coderay'
+	sudo gem install 'csl-styles'
+	sudo gem install 'json'
+	sudo gem install 'pygments.rb'
+	sudo gem install 'rghost'
+	sudo gem install 'rouge'
+	sudo gem install 'ruby_dev'
